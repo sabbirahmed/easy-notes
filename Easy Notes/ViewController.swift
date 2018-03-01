@@ -19,6 +19,16 @@ class ViewController: UIViewController, UITableViewDataSource {
         // Do any additional setup after loading the view, typically from a nib.
         
         self.title = "Notes"
+        
+        let addButton = UIBarButtonItem (barButtonSystemItem: .add, target: self, action: #selector(addNote))
+        self.navigationItem.rightBarButtonItem = addButton
+    }
+    
+    @objc func addNote() {
+        let rowName:String = "Row \(data.count + 1)"
+        data.insert(rowName, at: 0)
+        let indexPath:IndexPath = IndexPath(row: 0, section: 0)
+        table.insertRows(at: [indexPath], with: .automatic)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
