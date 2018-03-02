@@ -12,23 +12,28 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var table: UITableView!
     
-    var data: [String] = ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5", "Row 6", "Row 7", "Row 8"]
+    var data: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         self.title = "Notes"
-        
         let addButton = UIBarButtonItem (barButtonSystemItem: .add, target: self, action: #selector(addNote))
         self.navigationItem.rightBarButtonItem = addButton
+        self.navigationItem.leftBarButtonItem = editButtonItem
+        load()
     }
     
     @objc func addNote() {
+        if table.isEditing {
+            return
+        }
         let rowName:String = "Row \(data.count + 1)"
         data.insert(rowName, at: 0)
         let indexPath:IndexPath = IndexPath(row: 0, section: 0)
         table.insertRows(at: [indexPath], with: .automatic)
+        save()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -39,6 +44,28 @@ class ViewController: UIViewController, UITableViewDataSource {
         let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
         cell.textLabel?.text = data[indexPath.row]
         return cell
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        table.setEditing(editing, animated: animated)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        data.remove(at: indexPath.row)
+        table.deleteRows(at: [indexPath], with: .fade)
+        save()
+    }
+    
+    func save(){
+        UserDefaults.standard.set(data, forKey: "notes")
+    }
+    
+    func load(){
+        if let loadedData:[String] = UserDefaults.standard.value(forKey: "notes") as? [String] {
+            data = loadedData
+            table.reloadData()
+        }
     }
     
     override func didReceiveMemoryWarning() {
