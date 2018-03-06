@@ -21,6 +21,17 @@ class DetailViewController: UIViewController {
         textView.text = text
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        textView.becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        masterVew.newRowText = textView.text
+        textView.resignFirstResponder()
+    }
+    
     func setText(t:String) {
         text = t
         if isViewLoaded {
@@ -28,12 +39,6 @@ class DetailViewController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        masterVew.newRowText = textView.text
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
