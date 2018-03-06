@@ -11,12 +11,20 @@ import UIKit
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
+    var text:String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        textView.text = "Demo text"
+        textView.text = text
+    }
+    
+    func setText(t:String) {
+        text = t
+        if isViewLoaded {
+            textView.text = t
+        }
     }
 
     override func didReceiveMemoryWarning() {

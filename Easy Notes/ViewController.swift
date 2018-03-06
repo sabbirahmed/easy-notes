@@ -14,6 +14,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     var data: [String] = []
     var fileURL: URL!
+    var selectedRow:Int = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         data.insert(rowName, at: 0)
         let indexPath:IndexPath = IndexPath(row: 0, section: 0)
         table.insertRows(at: [indexPath], with: .automatic)
+        table.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         self.performSegue(withIdentifier: "details", sender: nil)
     }
 
@@ -64,6 +66,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "details", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let detailView:DetailViewController = segue.destination as! DetailViewController
+        selectedRow = table.indexPathForSelectedRow!.row
+        detailView.setText(t: data[selectedRow])
     }
     
     func save(){
